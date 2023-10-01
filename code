@@ -1,0 +1,111 @@
+clc 
+clear 
+close all 
+k=input("Enter the value of the time(n value) at which the first sample is taken :");
+m=input("Enter the value of the time(n value) at which last sample is taken : ");
+n=k:m;
+x=input("Enter the signal :");
+
+%original signal:
+subplot(2,2,1);
+stem(n,x);
+xlabel("Time Sample");
+ylabel("Amplitude");
+title("Original Sequence-22BEI0016");
+axis([-5 5 0 5]);
+
+%shifted signal
+f=input("Enter the value for which signal should be shifted :");
+v=n-f;
+subplot(2,2,2);
+stem(v,x);
+xlabel("Time Sample");
+ylabel("Amplitude");
+title("Signal after shifting-22BEI0016 ");
+axis([-5 5 0 5]);
+
+%time scaling of the shifted signal 
+b = input("Enter the value by which the signal should be scaled(enter 0 if time scaling is not required) : ");
+N = numel(x);
+y = zeros(1, N);
+
+
+for t = v
+    scaled_t = t / b; % Scale the time
+    if rem(scaled_t, 1) == 0 % Check if the result is an integer
+        index = find(v == t); % Find the corresponding index in the original signal
+        if ~isempty(index)
+            y(index) = x(index);
+        end
+    end
+end
+
+z=0;
+amp=[];
+for i=1:numel(y)
+    if y(i)>0
+        want=y(i);
+        z=z+1;
+        amp(z)=want;
+    else %y(i)=0
+        for dext =v
+        right_n = dext / b; 
+          if rem(right_n, 1) == 0
+             index_right = find(v == dext); % Find the corresponding index in the original signal
+             if ~isempty(index_right)
+                if i==index_right
+                   want=y(i);
+                   z=z+1;
+                   amp(z)=want;
+                end
+             end
+          end
+
+        end
+        
+    end
+end
+         
+
+
+r=0;
+c=[];
+for l = v
+    find_n = l / b; 
+    if rem(find_n, 1) == 0
+        r=r+1;
+        c(r)=find_n;
+        
+    end
+end
+
+if (b~=0)
+subplot(2, 2, 3);
+stem(c, amp);
+xlabel("Time Sample");
+ylabel("Amplitude");
+title("Time Scaling of the shifted Signal - 22BEI0016");
+axis([-5 5 0 5]);
+end
+
+%reversal of the shifted signal/reversal of the scaled signal
+a=input("Enter 1 if reversal is required else enter 0 :");
+if(a==1 && b~=0) 
+subplot(2,2,4);
+stem(-c,amp);
+xlabel("Time Sample");
+ylabel("Amplitude");
+elseif (a==1 && b==0) 
+subplot(2,2,4);
+stem(-v,x);
+xlabel("Time Sample");
+ylabel("Amplitude");
+end 
+if (b==0)
+title("Reversal of the shifted signal-22BEI0016 ");
+else 
+    title("Reversal of the scaled signal-22BEI0016 ");
+end
+
+axis([-5 5 0 5])
+
